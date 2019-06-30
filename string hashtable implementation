@@ -1,0 +1,75 @@
+#include<stdio.h>
+#include<iostream>
+using namespace std;
+
+#define max 2
+
+int hashfunction(char *str)
+{
+        int hash = 5381;
+        int c;
+
+        while (c = *str++)
+        {
+            hash = (((hash << 5) + hash) + c)%max; 
+        }
+        return hash%max;
+}
+
+struct hashnode{
+    char tag[11];
+    hashnode *next;
+};
+
+hashnode* hashmap[max];
+
+void insert_hash(char *str)
+{
+    int h=hashfunction(str);
+    hashnode *curr=new hashnode;
+    for(int i=0; i<11; i++)
+        curr->tag[i]=str[i];
+    curr->next=hashmap[h];
+    hashmap[h]=curr;
+}
+
+bool strcmp(char *a, char *b)
+{
+    int i;
+    for(i=0; a[i]!='\0'; i++)
+        if(a[i]!=b[i])
+            return false;
+    if(b[i]!='\0')
+        return false;
+    return true;
+}
+
+bool find(char *str)
+{
+    int h=hashfunction(str);
+    hashnode *curr = hashmap[h];
+    
+    while(curr!=NULL)
+    {
+        cout<<curr<<endl;
+        if(strcmp(str,curr->tag))
+            return true;
+        curr = curr->next;
+        
+    }
+    return false;
+}
+
+int main() {
+	char a[]="rajat";
+	char b[]="ajdjf";
+	char c[]="ajsflj";
+	char d[]="ajsldjf";
+	insert_hash(a);
+	insert_hash(b);
+	insert_hash(d);
+	cout<<find(a);
+	
+	
+	return 0;
+}
